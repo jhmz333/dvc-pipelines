@@ -1,0 +1,13 @@
+prepare:
+  path_file: data/student_performance_data.csv
+  test_size: 0.2
+  random_state: 42
+  output_folder: data/prepared
+
+train:
+  input_folder: data/prepared
+  output_folder: models
+
+evaluate:
+  test_data_folder: data/prepared
+  models_folder: models
