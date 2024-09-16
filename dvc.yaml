@@ -1,0 +1,24 @@
+stages:
+  prepare:
+    cmd: python src/prepare.py data/student_performance_data.csv data/prepared
+    deps:
+    - data/student_performance_data.csv
+    - src/prepare.py
+    outs:
+    - data/prepared
+    params:
+    - prepare.random_state
+    - prepare.test_size
+  train:
+    cmd: python src/train.py data/prepared models
+    deps:
+    - data/prepared
+    - src/train.py
+    outs:
+    - models
+  evaluate:
+    cmd: python src/evaluate.py data/prepared models
+    deps:
+    - data/prepared
+    - models
+    - src/evaluate.py

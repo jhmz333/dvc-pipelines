@@ -1,9 +1,10 @@
+import os
+import sys
 import pandas as pd
 import pickle
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from lightgbm import LGBMClassifier
-import yaml
 
 
 def read_train_data(input_folder):
@@ -20,16 +21,22 @@ def train_models(X_train, y_train, models):
         model.fit(X_train, y_train)
 
 
-def save_models(models, output_folder):
+def save_models(models, models_folder):
+
+    os.makedirs(models_folder, exist_ok=True)
+
     for model_name, model in models.items():
-        pickle.dump(model, open(f'{output_folder}/{model_name}.pkl', 'wb'))
+        pickle.dump(model, open(f'{models_folder}/{model_name}.pkl', 'wb'))
 
 
 def main():
 
-    params = yaml.safe_load(open("config/params.yaml"))["train"]
+    if len(sys.argv) != 3:
+        sys.stderr.write("Arguments error. Usage:\n")
+        sys.stderr.write("\tpython prepare.py input-folder models-folder\n")
+        sys.exit(1)
 
-    X_train, y_train = read_train_data(params["input_folder"])
+    X_train, y_train = read_train_data(sys.argv[1])
 
     models = {
         'LogisticRegression': LogisticRegression(),
@@ -39,7 +46,7 @@ def main():
 
     train_models(X_train, y_train, models)
 
-    save_models(models, params["output_folder"])
+    save_models(models, sys.argv[2])
 
 
 if __name__ == "__main__":

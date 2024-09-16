@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -12,7 +13,7 @@ def read(path_file):
 
 def hot_one_encode(df, cat_cols):
     # One Hot Encoding for categorical columns
-    return pd.get_dummies(df, prefix=cat_cols, columns=cat_cols)
+    return pd.get_dummies(df, columns=cat_cols)
 
 
 def scale(df, num_cols):
@@ -43,9 +44,14 @@ def save(X_train, X_test, y_train, y_test, output_folder):
 
 def main():
 
-    params = yaml.safe_load(open("config/params.yaml"))["prepare"]
+    if len(sys.argv) != 3:
+        sys.stderr.write("Arguments error. Usage:\n")
+        sys.stderr.write("\tpython prepare.py data-file output-folder\n")
+        sys.exit(1)
 
-    df = read(params["path_file"])
+    params = yaml.safe_load(open("params.yaml"))["prepare"]
+
+    df = read(sys.argv[1])
 
     num_cols = ['StudyTimeWeekly', 'Absences', 'GPA']
     cat_cols = ['Sports', 'Volunteering', 'ParentalSupport', 'Music', 'Extracurricular', 'ParentalEducation', 'Age', 'Gender', 'Tutoring', 'Ethnicity']
@@ -57,7 +63,7 @@ def main():
 
     X_train, X_test, y_train, y_test = split(df, params["test_size"], params["random_state"])
 
-    save(X_train, X_test, y_train, y_test, params["output_folder"])
+    save(X_train, X_test, y_train, y_test, sys.argv[2])
 
 
 if __name__ == "__main__":

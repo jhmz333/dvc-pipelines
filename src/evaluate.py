@@ -1,10 +1,10 @@
+import sys
 import pandas as pd
 import pickle
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from lightgbm import LGBMClassifier
 from sklearn.metrics import accuracy_score
-import yaml
 
 
 def read_test_data(test_data_folder):
@@ -27,9 +27,12 @@ def evaluate_models(X_test, y_test, models, models_folder):
 
 def main():
 
-    params = yaml.safe_load(open("config/params.yaml"))["evaluate"]
+    if len(sys.argv) != 3:
+        sys.stderr.write("Arguments error. Usage:\n")
+        sys.stderr.write("\tpython prepare.py test-data-folder models-folder\n")
+        sys.exit(1)
 
-    X_test, y_test = read_test_data(params["test_data_folder"])
+    X_test, y_test = read_test_data(sys.argv[1])
 
     models = {
         'LogisticRegression': LogisticRegression(),
@@ -37,7 +40,7 @@ def main():
         'LGBM': LGBMClassifier()
     }
 
-    evaluate_models(X_test, y_test, models, params["models_folder"])
+    evaluate_models(X_test, y_test, models, sys.argv[2])
 
 
 if __name__ == "__main__":
