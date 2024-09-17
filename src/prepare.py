@@ -59,8 +59,6 @@ def main():
     df = hot_one_encode(df, cat_cols)
     df = scale(df, num_cols)
 
-    print(df.head())
-
     X_train, X_test, y_train, y_test = split(df, params["test_size"], params["random_state"])
 
     save(X_train, X_test, y_train, y_test, sys.argv[2])

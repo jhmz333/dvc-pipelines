@@ -11,8 +11,6 @@ def read_train_data(input_folder):
     X_train = pd.read_parquet(f'{input_folder}/X_train.parquet')
     y_train = pd.read_parquet(f'{input_folder}/y_train.parquet').iloc[:,0]
 
-    print(X_train.shape, y_train.shape)
-
     return X_train, y_train
 
 
