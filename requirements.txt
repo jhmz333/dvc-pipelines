@@ -1,7 +1,6 @@
 numpy
 pandas
 dvc
-dvc-s3
 scikit-learn
 xgboost
 lightgbm
