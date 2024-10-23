@@ -1,0 +1,58 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/prepare.py data/student_performance_data.csv data/prepared
+    deps:
+    - path: data/student_performance_data.csv
+      hash: md5
+      md5: fe8bac208c3122bba88eb72aa84dd047
+      size: 166901
+    - path: src/prepare.py
+      hash: md5
+      md5: 60002b7eb97dedb413aace228feb1b2b
+      size: 2047
+    params:
+      params.yaml:
+        prepare.random_state: 42
+        prepare.test_size: 0.2
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: 2ba640b4d71e18f9a4e11451f3a71b5f.dir
+      size: 141251
+      nfiles: 4
+  train:
+    cmd: python src/train.py data/prepared models
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: 2ba640b4d71e18f9a4e11451f3a71b5f.dir
+      size: 141251
+      nfiles: 4
+    - path: src/train.py
+      hash: md5
+      md5: c074fff6d7e4516214d7ba4ee11cb8ef
+      size: 1309
+    outs:
+    - path: models
+      hash: md5
+      md5: 9bf0f524582e4be3043e805525458be7.dir
+      size: 1758601
+      nfiles: 3
+  evaluate:
+    cmd: python src/evaluate.py data/prepared models
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: 2ba640b4d71e18f9a4e11451f3a71b5f.dir
+      size: 141251
+      nfiles: 4
+    - path: models
+      hash: md5
+      md5: 9bf0f524582e4be3043e805525458be7.dir
+      size: 1758601
+      nfiles: 3
+    - path: src/evaluate.py
+      hash: md5
+      md5: b40a5cbd5444f54e4d8808f786403db7
+      size: 1347
